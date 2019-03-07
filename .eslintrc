@@ -5,7 +5,8 @@
     "standard-react"
   ],
   "env": {
-    "es6": true
+    "es6": true,
+    "browser": true
   },
   "plugins": [
     "react"
@@ -16,8 +17,20 @@
   "rules": {
     // don't force es6 functions to include space before paren
     "space-before-function-paren": 0,
-
     // allow specifying true explicitly for boolean props
-    "react/jsx-boolean-value": 0
+    "react/jsx-boolean-value": 0,
+    // Enforce semicolons at the end of the line
+    "semi": [2, "always"],
+    // Enforce comma at the end of the arrays etc
+    "comma-dangle": [2, "always-multiline"],
+    // Enforce 4 spaces
+    "indent": [2, 4],
+    "react/jsx-indent":  [2, 4],
+    "react/jsx-indent-props":  [2, 4],
+    "jsx-quotes": [2, "prefer-double"],
+    // Allow trailing spaces
+    "no-trailing-spaces": "off",
+    "object-curly-newline": ["error", { "multiline": true }],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
   }
 }
