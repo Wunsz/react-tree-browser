@@ -1,7 +1,7 @@
-import ExampleComponent from './'
+import DirectoryBrowser from './DirectoryBrowser';
 
 describe('ExampleComponent', () => {
-  it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
-  })
-})
+    it('is truthy', () => {
+        expect(DirectoryBrowser).toBeTruthy();
+    });
+});
