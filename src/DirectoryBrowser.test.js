@@ -57,6 +57,26 @@ describe('<DirectoryBrowser />', () => {
         const entries = browser.find('li');
 
         expect(entries.length).toBe(3);
+
+        browser.unmount();
+    });
+
+    it('renders root path even if tree has given root', () => {
+        const testTree = {
+            name: 'WHATEVER TEXT',
+            mimeType: 'directory',
+            children: {...TEST_TREE},
+        };
+
+        const browser = mount(
+            <DirectoryBrowser tree={testTree} config={DEFAULT_CONFIG} />,
+        );
+
+        const entries = browser.find('li');
+
+        expect(entries.length).toBe(3);
+
+        browser.unmount();
     });
 
     it('renders subdirectory after click', () => {
@@ -69,6 +89,8 @@ describe('<DirectoryBrowser />', () => {
         expect(browser.find('li').length).toBe(4);
         expect(browser.find('li.rdb-directory').length).toBe(2);
         expect(browser.find('li.rdb-file').length).toBe(2);
+
+        browser.unmount();
     });
 
     it('renders root path again after traversing down and then back again', () => {
@@ -80,5 +102,7 @@ describe('<DirectoryBrowser />', () => {
         browser.find('#rdb-go-up').simulate('click');
 
         expect(browser.find('li.rdb-directory').length).toBe(3);
+
+        browser.unmount();
     });
 });
