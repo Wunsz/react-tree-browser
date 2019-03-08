@@ -1,4 +1,4 @@
-import { traverseTree } from './treeUtils';
+import { expandTreePathForUpdate, traverseTree } from './treeUtils';
 
 describe('traverseTree @ treeUtils.js', () => {
     const TEST_TREE = {
@@ -48,7 +48,34 @@ describe('traverseTree @ treeUtils.js', () => {
 
     it('Throws error if path is invalid', () => {
         expect(
-            () => traverseTree(TEST_TREE, [ { id: 'id2' }, { id: 'id8' } ], 'directory')
+            () => traverseTree(TEST_TREE, [ { id: 'id2' }, { id: 'id8' } ], 'directory'),
         ).toThrow(Error);
+    });
+});
+
+describe('expandTreePathForUpdate @ treeUtils.js', () => {
+    it('Expands path with update', () => {
+        const path = [ { id: 'some' }, { id: 'path' } ];
+        const children = {
+            child1: {
+                name: 'Child 2',
+                children: {},
+            },
+            child2: {
+                name: 'Child 2',
+                children: {},
+            },
+        };
+
+        const updateObject = {
+            __RDB_CHILDREN_FETCHED__: { $set: true },
+            children: { $set: children },
+        };
+
+        const result = expandTreePathForUpdate(path, updateObject);
+
+        expect(result).toEqual(
+            { children: { some: { children: { path: updateObject } } } },
+        );
     });
 });
