@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import PhotoImage from './assets/material-photo.svg';
 import DirectoryImage from './assets/material-folder.svg';
 
 import DirectoryBrowser from 'react-directory-browser';
+
+const CustomGoUpHandle = (props) => <a {...props} />;
 
 export default class App extends Component {
     render() {
@@ -47,6 +49,20 @@ export default class App extends Component {
             },
             directoryMimeType: 'directory',
             childrenAttribute: 'children',
+            components: {
+                goUpButton: {
+                    component: CustomGoUpHandle,
+                    props: {
+                        href: '#',
+                        children: 'Go up!',
+                        style: {
+                            color: 'red',
+                            textDecoration: 'none',
+                        },
+                        className: 'rdg-go-up-class',
+                    },
+                },
+            },
         };
 
         return (
