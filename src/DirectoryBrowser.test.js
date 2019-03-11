@@ -7,38 +7,48 @@ import DirectoryBrowser from './DirectoryBrowser';
 configure({ adapter: new Adapter() });
 
 describe('<DirectoryBrowser />', () => {
-    const TEST_TREE = {
-        id1: {
+    const TEST_TREE = [
+        {
+            id: 'id1',
             name: 'Directory One',
             mimeType: 'directory',
-            children: {
-                id2: {
+            children: [
+                {
                     name: 'Directory Two',
                     mimeType: 'directory',
+                    children: [],
                 },
-                id3: {
+                {
+                    id: 'id3',
                     name: 'Directory Three',
                     mimeType: 'directory',
+                    children: [],
                 },
-                id4: {
+                {
+                    id: 'id4',
                     name: 'Some image',
                     mimeType: 'image',
                 },
-                id5: {
+                {
+                    id: 'id5',
                     name: 'Some other image',
                     mimeType: 'image',
                 },
-            },
+            ],
         },
-        id6: {
+        {
+            id: 'id6',
             name: 'Directory Four',
             mimeType: 'directory',
+            children: [],
         },
-        id7: {
+        {
+            id: 'id6',
             name: 'Directory Five',
             mimeType: 'directory',
+            children: [],
         },
-    };
+    ];
 
     const DEFAULT_CONFIG = {
         mimeTypes: {
@@ -47,6 +57,7 @@ describe('<DirectoryBrowser />', () => {
         },
         directoryMimeType: 'directory',
         childrenAttribute: 'children',
+        idAttribute: 'id',
     };
 
     it('renders root path', () => {
@@ -63,9 +74,10 @@ describe('<DirectoryBrowser />', () => {
 
     it('renders root path even if tree has given root', () => {
         const testTree = {
+            id: 'root',
             name: 'WHATEVER TEXT',
             mimeType: 'directory',
-            children: {...TEST_TREE},
+            children: [ ...TEST_TREE ],
         };
 
         const browser = mount(

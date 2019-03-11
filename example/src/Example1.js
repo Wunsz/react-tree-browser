@@ -7,38 +7,42 @@ import DirectoryBrowser from 'react-directory-browser';
 
 export default class Example1 extends Component {
     render() {
-        const tree = {
-            id1: {
+        const tree = [
+            {
                 name: 'Directory One',
                 mimeType: 'directory',
-                children: {
-                    id2: {
+                children: [
+                    {
                         name: 'Directory Two',
                         mimeType: 'directory',
+                        children: [],
                     },
-                    id3: {
+                    {
                         name: 'Directory Three',
                         mimeType: 'directory',
+                        children: [],
                     },
-                    id4: {
+                    {
                         name: 'Some image',
                         mimeType: 'image',
                     },
-                    id5: {
+                    {
                         name: 'Some other image',
                         mimeType: 'image',
                     },
-                },
+                ],
             },
-            id6: {
+            {
                 name: 'Directory Four',
                 mimeType: 'directory',
+                children: [],
             },
-            id7: {
+            {
                 name: 'Directory Five',
                 mimeType: 'directory',
+                children: [],
             },
-        };
+        ];
 
         const config = {
             mimeTypes: {

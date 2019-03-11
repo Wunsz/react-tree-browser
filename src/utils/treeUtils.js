@@ -1,31 +1,30 @@
-export const traverseTree = (treeNode, path, directoryMimeType) => {
+export const traverseTree = (treeNode, path, childrenAttribute = 'children') => {
     if (path.length === 0) {
         return treeNode;
     }
 
-    const pathNodeId = path.shift().id;
-    const nodesIds = Object.getOwnPropertyNames(treeNode.children);
+    const pathNodeIndex = path.shift().index;
 
-    for (let nodeId of nodesIds) {
-        if (treeNode.children[nodeId].mimeType === directoryMimeType && nodeId === pathNodeId) {
-            return traverseTree(treeNode.children[nodeId], path, directoryMimeType);
+    for (let [index, node] of treeNode[childrenAttribute].entries()) {
+        if (node[childrenAttribute] !== undefined && index === pathNodeIndex) {
+            return traverseTree(node, path, childrenAttribute);
         }
     }
 
     throw Error(`Invalid path given ${path}. No such path in tree!`);
 };
 
-export const expandTreePathForUpdate = (path, updateObject) => {
+export const expandTreePathForUpdate = (path, updateObject, childrenAttribute = 'children') => {
     if (path.length === 0) {
         return updateObject;
     } else {
-        const pathNodeId = path.shift().id;
+        const pathNodeIndex = path.shift().index;
         const currentNode = expandTreePathForUpdate(path, updateObject);
 
-        return { children: { [pathNodeId]: currentNode } };
+        return { [childrenAttribute]: { [pathNodeIndex]: currentNode } };
     }
 };
 
-export const extendChildrenWithTheirIds = (children) => {
-    return Object.getOwnPropertyNames(children).map(key => ({__RDB_NODE_ID__: key, ...children[key]}));
+export const pathAsString = (path) => {
+    return '/' + path.map(pathElement => pathElement.index).join('/');
 };

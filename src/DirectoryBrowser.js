@@ -4,44 +4,51 @@ import PropTypes from 'prop-types';
 import FileNode from './components/FileNode';
 import DirectoryNode from './components/DirectoryNode';
 import withTreeBrowser from './hoc/withTreeBrowser';
+import { pathAsString } from './utils/treeUtils';
 
 class DirectoryBrowser extends Component {
-    nodeToElement = (node) => {
-        const { directoryMimeType, mimeTypes, onOpenDirectory } = this.props;
+    nodeToElement = (node, index) => {
+        const { childrenAttribute, mimeTypes, onOpenDirectory, getDisplayName, getMimeType, path } = this.props;
+        const nodeKey = pathAsString(path) + '/' + index;
 
-        if (node.mimeType === directoryMimeType) {
+        if (node[childrenAttribute] !== undefined) {
             return <DirectoryNode
-                key={node.__RDB_NODE_ID__}
-                onClick={() => onOpenDirectory(node.__RDB_NODE_ID__, node.name)}
-                mimeTypeImage={mimeTypes[node.mimeType]}
-                name={node.name}
+                key={nodeKey}
+                onClick={() => onOpenDirectory(index, getDisplayName(node))}
+                mimeTypeImage={mimeTypes[getMimeType(node)]}
+                name={getDisplayName(node)}
+            />;
+        } else {
+            return <FileNode
+                key={nodeKey}
+                mimeTypeImage={mimeTypes[getMimeType(node)]}
+                name={getDisplayName(node)}
             />;
         }
-
-        return <FileNode
-            key={node.__RDB_NODE_ID__}
-            mimeTypeImage={mimeTypes[node.mimeType]}
-            name={node.name}
-        />;
     };
 
     render() {
-        const { onGoToParentDirectory, path, currentNode } = this.props;
+        const { onGoToParentDirectory, path, currentNode, childrenAttribute, loading } = this.props;
 
-        const childrenAsList = !currentNode.children ? [] : Object.getOwnPropertyNames(currentNode.children).map(c => ({
-            ...currentNode.children[c],
-            __RDB_NODE_ID__: c,
-        }));
+        let children = <p>Loading</p>;
+
+        if (!loading) {
+            children = (
+                <ul>
+                    {currentNode[childrenAttribute].map((node, index) => this.nodeToElement(node, index))}
+                </ul>
+            );
+        }
 
         return (
             <div>
                 <div>
-                    <h5><button id="rdb-go-up" onClick={onGoToParentDirectory}>Go up</button> /{path.map(node => node.name).join('/')}</h5>
+                    <h5>
+                        <button id="rdb-go-up" onClick={onGoToParentDirectory}>Go up</button>
+                        /{path.map(node => node.name).join('/')}</h5>
                 </div>
                 <div>
-                    <ul>
-                        {childrenAsList.map(this.nodeToElement)}
-                    </ul>
+                    {children}
                 </div>
             </div>
         );
@@ -53,11 +60,19 @@ DirectoryBrowser.propTypes = {
     onOpenDirectory: PropTypes.func.isRequired,
     currentNode: PropTypes.any.isRequired,
     path: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        index: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
     })),
-    directoryMimeType: PropTypes.string.isRequired,
+    childrenAttribute: PropTypes.string.isRequired,
     mimeTypes: PropTypes.any.isRequired,
+    getDisplayName: PropTypes.func,
+    getMimeType: PropTypes.func,
+    loading: PropTypes.bool,
+};
+
+DirectoryBrowser.defaultProps = {
+    getDisplayName: node => node.name,
+    getMimeType: node => node.mimeType,
 };
 
 export default withTreeBrowser(DirectoryBrowser);

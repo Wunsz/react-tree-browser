@@ -6,40 +6,47 @@ import DirectoryImage from './assets/material-folder.svg';
 import DirectoryBrowser from 'react-directory-browser';
 
 const NODES = {
-    root: {
-        id1: {
+    root: [
+        {
+            id: 'id1',
             name: 'Directory One',
             mimeType: 'directory',
         },
-        id6: {
+        {
+            id: 'id6',
             name: 'Directory Four',
             mimeType: 'directory',
         },
-        id7: {
+        {
+            id: 'id7',
             name: 'Directory Five',
             mimeType: 'directory',
         },
-    },
-    id1: {
-        id2: {
+    ],
+    id1: [
+        {
+            id: 'id2',
             name: 'Directory Two',
             mimeType: 'directory',
         },
-        id3: {
+        {
+            id: 'id3',
             name: 'Directory Three',
             mimeType: 'directory',
         },
-        id4: {
+        {
+            id: 'id4',
             name: 'Some image',
             mimeType: 'image',
         },
-        id5: {
+        {
+            id: 'id5',
             name: 'Some other image',
             mimeType: 'image',
         },
-    },
-    id6: {},
-    id7: {},
+    ],
+    id6: [],
+    id7: [],
 };
 
 function delay(ms) {
@@ -48,10 +55,22 @@ function delay(ms) {
     });
 }
 
-async function fetchDirectory(node) {
+async function fetchDirectory(node, path) {
     await delay(1000);
 
-    return NODES[node.__RDB_NODE_ID__] || {};
+    if (NODES[node.id]) {
+        return NODES[node.id].map(node => {
+            const extendedNode = { ...node };
+
+            if (node.mimeType === 'directory') {
+                extendedNode.children = [];
+            }
+
+            return extendedNode;
+        });
+    } else {
+        return [];
+    }
 }
 
 export default class Example2 extends Component {
@@ -63,12 +82,18 @@ export default class Example2 extends Component {
             },
             directoryMimeType: 'directory',
             childrenAttribute: 'children',
+            resolver: fetchDirectory,
+        };
+
+        const initialTree = {
+            id: 'root',
+            children: [],
         };
 
         return (
             <div>
                 <h2> Example 2 - Dynamically loaded tree </h2>
-                <DirectoryBrowser tree={{}} config={config} resolver={fetchDirectory} />
+                <DirectoryBrowser tree={initialTree} config={config} />
             </div>
         );
     }

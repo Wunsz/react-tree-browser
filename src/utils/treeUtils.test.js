@@ -1,81 +1,99 @@
-import { expandTreePathForUpdate, traverseTree } from './treeUtils';
+import { expandTreePathForUpdate, pathAsString, traverseTree } from './treeUtils';
 
 describe('traverseTree @ treeUtils.js', () => {
     const TEST_TREE = {
         name: 'Test',
-        mimeType: 'directory',
-        children: {
-            id1: {
+        children: [
+            {
                 name: 'Some Dir One',
-                mimeType: 'directory',
+                children: [],
             },
-            id2: {
+            {
                 name: 'Some other dir',
-                mimeType: 'directory',
-                children: {
-                    id3: {
+                children: [
+                    {
                         name: 'Deep element',
-                        mimeType: 'directory',
+                        children: [],
                     },
-                    id4: {
+                    {
                         name: 'Deep element',
-                        mimeType: 'directory',
+                        children: [],
                     },
-                },
+                ],
             },
-        },
+        ],
     };
 
     it('Returns current node if path is empty', () => {
         const tree = { name: 'Test' };
 
-        const result = traverseTree(tree, [], 'directory');
+        const result = traverseTree(tree, []);
 
         expect(result).toBe(tree);
     });
 
     it('Returns correct node if path is valid', () => {
-        const result = traverseTree(TEST_TREE, [ { id: 'id2' }, { id: 'id4' } ], 'directory');
+        const result = traverseTree(TEST_TREE, [ { index: 1 }, { index: 1 } ]);
 
-        expect(result).toBe(TEST_TREE.children.id2.children.id4);
+        expect(result).toBe(TEST_TREE.children[1].children[1]);
     });
 
     it('Returns correct node with children if path is valid', () => {
-        const result = traverseTree(TEST_TREE, [ { id: 'id2' } ], 'directory');
+        const result = traverseTree(TEST_TREE, [ { index: 1 } ]);
 
-        expect(result).toBe(TEST_TREE.children.id2);
+        expect(result).toBe(TEST_TREE.children[1]);
     });
 
     it('Throws error if path is invalid', () => {
         expect(
-            () => traverseTree(TEST_TREE, [ { id: 'id2' }, { id: 'id8' } ], 'directory'),
+            () => traverseTree(TEST_TREE, [ { index: 1 }, { index: 2 } ]),
         ).toThrow(Error);
     });
 });
 
 describe('expandTreePathForUpdate @ treeUtils.js', () => {
     it('Expands path with update', () => {
-        const path = [ { id: 'some' }, { id: 'path' } ];
-        const children = {
-            child1: {
+        const path = [ { index: 6 }, { index: 2 } ];
+        const children = [
+            {
                 name: 'Child 2',
-                children: {},
+                children: [],
             },
-            child2: {
+            {
                 name: 'Child 2',
-                children: {},
+                children: [],
             },
-        };
+        ];
 
-        const updateObject = {
-            __RDB_CHILDREN_FETCHED__: { $set: true },
-            children: { $set: children },
-        };
+        const updateObject = { children: { $set: children } };
 
         const result = expandTreePathForUpdate(path, updateObject);
 
         expect(result).toEqual(
-            { children: { some: { children: { path: updateObject } } } },
+            { children: { 6: { children: { 2: updateObject } } } },
         );
+    });
+});
+
+describe('pathAsString @ treeUtils.js', () => {
+    it('Expands empty (root) path to single slash', () => {
+        const path = [];
+        const stringPath = pathAsString(path);
+
+        expect(stringPath).toBe('/');
+    });
+
+    it('Expands single path to its index name', () => {
+        const path = [ { index: 6 } ];
+        const stringPath = pathAsString(path);
+
+        expect(stringPath).toBe('/6');
+    });
+
+    it('Expands path to its indexes name', () => {
+        const path = [ { index: 6 }, { index: 2 } ];
+        const stringPath = pathAsString(path);
+
+        expect(stringPath).toBe('/6/2');
     });
 });
