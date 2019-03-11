@@ -8,13 +8,13 @@ import { pathAsString } from './utils/treeUtils';
 
 class TreeBrowser extends Component {
     nodeToElement = (node, index) => {
-        const { childrenAttribute, mimeTypes, onOpenDirectory, getDisplayName, getMimeType, path } = this.props;
+        const { childrenAttribute, mimeTypes, onOpenNode, getDisplayName, getMimeType, path } = this.props;
         const nodeKey = pathAsString(path) + '/' + index;
 
         if (node[childrenAttribute] !== undefined) {
             return <DirectoryNode
                 key={nodeKey}
-                onClick={() => onOpenDirectory(index, { name: getDisplayName(node) })}
+                onClick={() => onOpenNode(index, { name: getDisplayName(node) })}
                 mimeTypeImage={mimeTypes[getMimeType(node)]}
                 name={getDisplayName(node)}
             />;
@@ -28,7 +28,7 @@ class TreeBrowser extends Component {
     };
 
     render() {
-        const { onGoToParentDirectory, path, currentNode, childrenAttribute, loading } = this.props;
+        const { onGoToParent, path, currentNode, childrenAttribute, loading } = this.props;
 
         let children = <p>Loading</p>;
 
@@ -44,7 +44,7 @@ class TreeBrowser extends Component {
             <div>
                 <div>
                     <h5>
-                        <button id="rdb-go-up" onClick={onGoToParentDirectory}>Go up</button>
+                        <button id="rdb-go-up" onClick={onGoToParent}>Go up</button>
                         /{path.map(node => node.metaData.name).join('/')}</h5>
                 </div>
                 <div>
@@ -56,8 +56,8 @@ class TreeBrowser extends Component {
 }
 
 TreeBrowser.propTypes = {
-    onGoToParentDirectory: PropTypes.func.isRequired,
-    onOpenDirectory: PropTypes.func.isRequired,
+    onGoToParent: PropTypes.func.isRequired,
+    onOpenNode: PropTypes.func.isRequired,
     currentNode: PropTypes.any.isRequired,
     path: PropTypes.arrayOf(PropTypes.shape({
         index: PropTypes.number.isRequired,

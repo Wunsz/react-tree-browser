@@ -8,7 +8,7 @@ import withTreeBrowser from './withTreeBrowser';
 configure({ adapter: new Adapter() });
 
 function delay(ms) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         setTimeout(resolve, ms);
     });
 }
@@ -79,7 +79,7 @@ describe('async withTreeBrowser()', () => {
     };
 
     const resolverWithAwaiter = (awaiter, mock = () => null) => {
-        return async (node, path) => {
+        return async (node) => {
             await delay(30);
 
             setTimeout(awaiter.makeReady, 5);
@@ -126,7 +126,7 @@ describe('async withTreeBrowser()', () => {
         const wrapper = shallow(<TreeBrowserComponent tree={tree} config={config} />);
         await awaiter.isReady();
 
-        wrapper.props().onOpenDirectory(0, 'id1');
+        wrapper.props().onOpenNode(0, 'id1');
         await awaiter.isReady();
 
         expect(wrapper.props().currentNode.id).toBe('id1');
@@ -165,17 +165,17 @@ describe('async withTreeBrowser()', () => {
         expect(mock).toHaveBeenCalledTimes(1);
 
         // Open child and fetch it's data
-        wrapper.props().onOpenDirectory(0, 'id1');
+        wrapper.props().onOpenNode(0, 'id1');
         await awaiter.isReady();
 
         expect(mock).toHaveBeenCalledTimes(2);
 
         // Go up
-        wrapper.props().onGoToParentDirectory();
+        wrapper.props().onGoToParent();
         await delay(10);
 
         // Open child again
-        wrapper.props().onOpenDirectory(0, 'id1');
+        wrapper.props().onOpenNode(0, 'id1');
 
         expect(mock).toHaveBeenCalledTimes(2);
         expect(wrapper.props().currentNode.id).toBe('id1');
@@ -214,17 +214,17 @@ describe('async withTreeBrowser()', () => {
         expect(mock).toHaveBeenCalledTimes(1);
 
         // Open child and fetch it's data
-        wrapper.props().onOpenDirectory(0, 'id1');
+        wrapper.props().onOpenNode(0, 'id1');
         await awaiter.isReady();
 
         expect(mock).toHaveBeenCalledTimes(2);
 
         // Go up
-        wrapper.props().onGoToParentDirectory();
+        wrapper.props().onGoToParent();
         await delay(10);
 
         // Open child again
-        wrapper.props().onOpenDirectory(0, 'id1');
+        wrapper.props().onOpenNode(0, 'id1');
         await awaiter.isReady();
 
         expect(mock).toHaveBeenCalledTimes(3);

@@ -43,11 +43,20 @@ function withTreeBrowser(WrappedComponent, tree, config) {
             };
         };
 
+        /**
+         * Try to resolve children of the root node if applicable (if resolver provided)
+         */
         componentDidMount() {
             // noinspection JSPotentiallyInvalidUsageOfThis,JSIgnoredPromiseFromCall
             this.resolveChildren(this.state.path);
         }
 
+        /**
+         * Resolves children of the given path if there is a resolver and the path should be resolved
+         *
+         * @param path
+         * @returns {Promise<void>}
+         */
         resolveChildren = async (path) => {
             // No resolver - no fetch
             if (!this.state.config.resolver) return;
@@ -68,16 +77,31 @@ function withTreeBrowser(WrappedComponent, tree, config) {
             });
         };
 
+        /**
+         * Traverses the tree based on given path (or one from the state) and returns found node.
+         *
+         * @param path
+         * @returns {undefined}
+         */
         getCurrentNode = (path = false) => {
             path = path || this.state.path;
             return traverseTree(this.state.tree, [ ...path ], this.state.childrenAttribute);
         };
 
-        goToParentDirectory = () => {
+        /**
+         * Goes to parent node (one level up)
+         */
+        goToParent = () => {
             this.setState({ path: this.state.path.slice(0, -1) });
         };
 
-        openDirectory = (index, metaData) => {
+        /**
+         * Opens given child of current node and assigns given metadata to this node (in path)
+         *
+         * @param index Index of given child in node
+         * @param metaData
+         */
+        openNode = (index, metaData = {}) => {
             const newPath = [ ...this.state.path, {
                 index,
                 metaData,
@@ -99,8 +123,8 @@ function withTreeBrowser(WrappedComponent, tree, config) {
                 path: [ ...state.path ],
                 currentNode: this.getCurrentNode(),
                 childrenAttribute: state.config.childrenAttribute,
-                onGoToParentDirectory: this.goToParentDirectory,
-                onOpenDirectory: this.openDirectory,
+                onGoToParent: this.goToParent,
+                onOpenNode: this.openNode,
             };
 
             return <WrappedComponent {...this.props} {...handles} />;
