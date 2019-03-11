@@ -1,6 +1,6 @@
 {
   "name": "react-tree-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component allowing to browse tree structure",
   "author": "Bartosz 'Wunsz' Jabłoński | Code in the Cup",
   "license": "MIT",
@@ -8,6 +8,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "keywords": ["tree", "browser", "tree-browser", "react", "directory", "files", "folder", "folders", "directories", "browse"],
   "engines": {
     "node": ">=8",
     "npm": ">=5"
