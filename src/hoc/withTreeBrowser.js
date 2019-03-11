@@ -44,7 +44,7 @@ function withTreeBrowser(WrappedComponent, tree, config) {
         };
 
         componentDidMount() {
-            // noinspection JSIgnoredPromiseFromCall
+            // noinspection JSPotentiallyInvalidUsageOfThis,JSIgnoredPromiseFromCall
             this.resolveChildren(this.state.path);
         }
 
@@ -77,10 +77,10 @@ function withTreeBrowser(WrappedComponent, tree, config) {
             this.setState({ path: this.state.path.slice(0, -1) });
         };
 
-        openDirectory = (index, name) => {
+        openDirectory = (index, metaData) => {
             const newPath = [ ...this.state.path, {
                 index,
-                name,
+                metaData,
             } ];
 
             this.setState({ path: newPath });
@@ -92,12 +92,12 @@ function withTreeBrowser(WrappedComponent, tree, config) {
         render() {
             const { state } = this;
 
+            // noinspection JSPotentiallyInvalidUsageOfThis
             const handles = {
                 tree: state.tree,
                 loading: state.loading,
                 path: [ ...state.path ],
                 currentNode: this.getCurrentNode(),
-                mimeTypes: state.config.mimeTypes,
                 childrenAttribute: state.config.childrenAttribute,
                 onGoToParentDirectory: this.goToParentDirectory,
                 onOpenDirectory: this.openDirectory,

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PhotoImage from './assets/material-photo.svg';
 import DirectoryImage from './assets/material-folder.svg';
 
-import DirectoryBrowser from 'react-directory-browser';
+import { TreeBrowser } from 'react-tree-browser';
 
 const NODES = {
     root: [
@@ -50,12 +50,12 @@ const NODES = {
 };
 
 function delay(ms) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         setTimeout(resolve, ms);
     });
 }
 
-async function fetchDirectory(node, path) {
+async function fetchDirectory(node) {
     await delay(1000);
 
     if (NODES[node.id]) {
@@ -75,25 +75,25 @@ async function fetchDirectory(node, path) {
 
 export default class Example2 extends Component {
     render() {
-        const config = {
-            mimeTypes: {
-                directory: DirectoryImage,
-                image: PhotoImage,
-            },
-            directoryMimeType: 'directory',
-            childrenAttribute: 'children',
-            resolver: fetchDirectory,
-        };
-
         const initialTree = {
             id: 'root',
             children: [],
         };
 
+        const config = {
+            childrenAttribute: 'children',
+            resolver: fetchDirectory,
+        };
+
+        const mimeTypes = {
+            directory: DirectoryImage,
+            image: PhotoImage,
+        };
+
         return (
             <div>
                 <h2> Example 2 - Dynamically loaded tree </h2>
-                <DirectoryBrowser tree={initialTree} config={config} />
+                <TreeBrowser tree={initialTree} config={config} mimeTypes={mimeTypes} />
             </div>
         );
     }

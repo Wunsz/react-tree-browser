@@ -6,7 +6,7 @@ import DirectoryNode from './components/DirectoryNode';
 import withTreeBrowser from './hoc/withTreeBrowser';
 import { pathAsString } from './utils/treeUtils';
 
-class DirectoryBrowser extends Component {
+class TreeBrowser extends Component {
     nodeToElement = (node, index) => {
         const { childrenAttribute, mimeTypes, onOpenDirectory, getDisplayName, getMimeType, path } = this.props;
         const nodeKey = pathAsString(path) + '/' + index;
@@ -14,7 +14,7 @@ class DirectoryBrowser extends Component {
         if (node[childrenAttribute] !== undefined) {
             return <DirectoryNode
                 key={nodeKey}
-                onClick={() => onOpenDirectory(index, getDisplayName(node))}
+                onClick={() => onOpenDirectory(index, { name: getDisplayName(node) })}
                 mimeTypeImage={mimeTypes[getMimeType(node)]}
                 name={getDisplayName(node)}
             />;
@@ -45,7 +45,7 @@ class DirectoryBrowser extends Component {
                 <div>
                     <h5>
                         <button id="rdb-go-up" onClick={onGoToParentDirectory}>Go up</button>
-                        /{path.map(node => node.name).join('/')}</h5>
+                        /{path.map(node => node.metaData.name).join('/')}</h5>
                 </div>
                 <div>
                     {children}
@@ -55,24 +55,25 @@ class DirectoryBrowser extends Component {
     }
 }
 
-DirectoryBrowser.propTypes = {
+TreeBrowser.propTypes = {
     onGoToParentDirectory: PropTypes.func.isRequired,
     onOpenDirectory: PropTypes.func.isRequired,
     currentNode: PropTypes.any.isRequired,
     path: PropTypes.arrayOf(PropTypes.shape({
         index: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
+        metaData: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
     })),
     childrenAttribute: PropTypes.string.isRequired,
-    mimeTypes: PropTypes.any.isRequired,
+    mimeTypes: PropTypes.any,
     getDisplayName: PropTypes.func,
     getMimeType: PropTypes.func,
     loading: PropTypes.bool,
 };
 
-DirectoryBrowser.defaultProps = {
+TreeBrowser.defaultProps = {
     getDisplayName: node => node.name,
     getMimeType: node => node.mimeType,
+    mimeTypes: {},
 };
 
-export default withTreeBrowser(DirectoryBrowser);
+export default withTreeBrowser(TreeBrowser);

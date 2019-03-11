@@ -2,11 +2,11 @@ import React from 'react';
 import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import DirectoryBrowser from './DirectoryBrowser';
+import TreeBrowser from './TreeBrowser';
 
 configure({ adapter: new Adapter() });
 
-describe('<DirectoryBrowser />', () => {
+describe('<TreeBrowser />', () => {
     const TEST_TREE = [
         {
             id: 'id1',
@@ -50,19 +50,20 @@ describe('<DirectoryBrowser />', () => {
         },
     ];
 
-    const DEFAULT_CONFIG = {
+    const DEFAULT_CONFIG = { childrenAttribute: 'children' };
+
+    const DEFAULT_COMPONENT_CONFIG = {
         mimeTypes: {
             directory: null,
             image: null,
         },
         directoryMimeType: 'directory',
-        childrenAttribute: 'children',
         idAttribute: 'id',
     };
 
     it('renders root path', () => {
         const browser = mount(
-            <DirectoryBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} />,
+            <TreeBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} {...DEFAULT_COMPONENT_CONFIG} />,
         );
 
         const entries = browser.find('li');
@@ -81,7 +82,7 @@ describe('<DirectoryBrowser />', () => {
         };
 
         const browser = mount(
-            <DirectoryBrowser tree={testTree} config={DEFAULT_CONFIG} />,
+            <TreeBrowser tree={testTree} config={DEFAULT_CONFIG} {...DEFAULT_COMPONENT_CONFIG} />,
         );
 
         const entries = browser.find('li');
@@ -93,7 +94,7 @@ describe('<DirectoryBrowser />', () => {
 
     it('renders subdirectory after click', () => {
         const browser = mount(
-            <DirectoryBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} />,
+            <TreeBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} {...DEFAULT_COMPONENT_CONFIG} />,
         );
 
         browser.find('li.rdb-directory').first().simulate('click');
@@ -107,7 +108,7 @@ describe('<DirectoryBrowser />', () => {
 
     it('renders root path again after traversing down and then back again', () => {
         const browser = mount(
-            <DirectoryBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} />,
+            <TreeBrowser tree={TEST_TREE} config={DEFAULT_CONFIG} {...DEFAULT_COMPONENT_CONFIG} />,
         );
 
         browser.find('li.rdb-directory').first().simulate('click');

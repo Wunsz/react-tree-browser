@@ -1,6 +1,6 @@
 {
-  "name": "react-directory-browser-example",
-  "homepage": "https://.github.io/react-directory-browser",
+  "name": "react-tree-browser-example",
+  "homepage": "https://.github.io/react-tree-browser",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
@@ -9,7 +9,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "^1.1.4",
-    "react-directory-browser": "link:.."
+    "react-tree-browser": "link:.."
   },
   "scripts": {
     "start": "react-scripts start",

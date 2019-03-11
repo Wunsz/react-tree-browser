@@ -1,10 +1,10 @@
 {
-  "name": "react-directory-browser",
+  "name": "react-tree-browser",
   "version": "1.0.0",
-  "description": "React component allowing to browse directory-like structure",
+  "description": "React component allowing to browse tree structure",
   "author": "Bartosz 'Wunsz' Jabłoński | Code in the Cup",
   "license": "MIT",
-  "repository": "https://gitlab.com/codeinthecup/react-directory-browser",
+  "repository": "https://gitlab.com/codeinthecup/react-tree-browser",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
